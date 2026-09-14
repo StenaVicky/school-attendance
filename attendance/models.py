@@ -1,5 +1,23 @@
-
 from django.db import models
+
+
+class Student(models.Model):
+    student_id = models.AutoField(primary_key=True)
+
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    date_of_birth = models.DateField()
+    gender = models.CharField(max_length=6, null=True, blank=True)
+    email = models.EmailField(max_length=100)
+    enrollment_date = models.DateField()
+    phone = models.CharField(max_length=20, null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'students'
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class Attendance(models.Model):
@@ -34,4 +52,3 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"Student {self.student_id} - {self.date}"
-
