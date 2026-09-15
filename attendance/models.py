@@ -12,6 +12,17 @@ class Student(models.Model):
     enrollment_date = models.DateField()
     phone = models.CharField(max_length=20, null=True, blank=True)
 
+    STUDENT_TYPE_CHOICES = [
+        ('DAY_SCHOLAR', 'Day Scholar'),
+        ('BOARDER', 'Boarder'),
+    ]
+
+    student_type = models.CharField(
+        max_length=20,
+        choices=STUDENT_TYPE_CHOICES,
+        default='DAY_SCHOLAR',
+    )
+
     class Meta:
         managed = False
         db_table = 'students'

@@ -1,10 +1,19 @@
 from datetime import date
 
-from attendance.models import Attendance
+from attendance.models import Attendance, Student
 
 
 def record_arrival(student_id, arrival_time):
     today = date.today()
+
+    try:
+        student = Student.objects.get(student_id=student_id)
+    except Student.DoesNotExist:
+        return {
+            'success': False,
+            'message': 'Student not found',
+            'attendance': None,
+        }
 
     attendance, created = Attendance.objects.get_or_create(
         student_id=student_id,
@@ -26,10 +35,22 @@ def record_arrival(student_id, arrival_time):
     return {
         'success': True,
         'message': 'Arrival recorded',
+        'student_type': student.student_type,
         'attendance': attendance,
     }
+
+
 def record_departure(student_id, departure_time):
     today = date.today()
+
+    try:
+        Student.objects.get(student_id=student_id)
+    except Student.DoesNotExist:
+        return {
+            'success': False,
+            'message': 'Student not found',
+            'attendance': None,
+        }
 
     try:
         attendance = Attendance.objects.get(
