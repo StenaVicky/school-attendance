@@ -34,6 +34,17 @@ class Student(models.Model):
 
 class Attendance(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
+    SCAN_METHOD_CHOICES = [
+        ('FINGERPRINT', 'Fingerprint'),
+        ('MANUAL', 'Manual'),
+        ('OFFLINE', 'Offline'),
+    ]
+
+    scan_method = models.CharField(
+        max_length=20,
+        choices=SCAN_METHOD_CHOICES,
+        default='FINGERPRINT',
+    )
     STATUS_CHOICES = [
         ('PRESENT', 'Present'),
         ('ABSENT', 'Absent'),
