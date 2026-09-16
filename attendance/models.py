@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Student(models.Model):
@@ -32,6 +33,7 @@ class Student(models.Model):
 
 
 class Attendance(models.Model):
+    created_at = models.DateTimeField(default=timezone.now)
     STATUS_CHOICES = [
         ('PRESENT', 'Present'),
         ('ABSENT', 'Absent'),
