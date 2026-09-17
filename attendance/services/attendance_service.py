@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, time
 
 from attendance.models import Attendance, Student
 
@@ -15,13 +15,21 @@ def record_arrival(student_id, arrival_time):
             'attendance': None,
         }
 
+    comment = ''
+
+    if student.student_type == 'DAY_SCHOLAR':
+        if arrival_time <= time(8, 0):
+            comment = 'ON TIME'
+        else:
+            comment = 'LATE'
+
     attendance, created = Attendance.objects.get_or_create(
         student_id=student_id,
         date=today,
         defaults={
             'arrival_time': arrival_time,
             'status': 'PRESENT',
-            'comment': '',
+            'comment': comment,
         }
     )
 
