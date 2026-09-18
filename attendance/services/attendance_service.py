@@ -87,3 +87,40 @@ def record_departure(student_id, departure_time):
         'message': 'Departure recorded',
         'attendance': attendance,
     }
+
+
+def mark_absent_students(current_time):
+    today = date.today()
+    cutoff_time = time(8, 30)
+
+    if current_time <= cutoff_time:
+        return {
+            'success': False,
+            'message': 'Attendance cutoff has not been reached',
+            'absent_count': 0,
+        }
+
+    absent_count = 0
+
+    students = Student.objects.all()
+
+    for student in students:
+        attendance_exists = Attendance.objects.filter(
+            student_id=student.student_id,
+            date=today
+        ).exists()
+
+        if not attendance_exists:
+            Attendance.objects.create(
+                student_id=student.student_id,
+                date=today,
+                status='ABSENT',
+                comment='ABSENT',
+            )
+            absent_count += 1
+
+    return {
+        'success': True,
+        'message': 'Absent students marked',
+        'absent_count': absent_count,
+    }
