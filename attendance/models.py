@@ -76,3 +76,31 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"Student {self.student_id} - {self.date}"
+class FingerprintEnrollment(models.Model):
+    FINGER_CHOICES = [
+        ('LEFT_THUMB', 'Left Thumb'),
+        ('LEFT_INDEX', 'Left Index'),
+        ('RIGHT_THUMB', 'Right Thumb'),
+        ('RIGHT_INDEX', 'Right Index'),
+    ]
+
+    student_id = models.IntegerField()
+    finger = models.CharField(
+        max_length=20,
+        choices=FINGER_CHOICES
+    )
+    enrolled_at = models.DateTimeField(
+        default=timezone.now
+    )
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student_id', 'finger'],
+                name='unique_student_fingerprint'
+            )
+        ]
+
+    def __str__(self):
+        return f"Student {self.student_id} - {self.finger}"
