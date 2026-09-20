@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.utils import timezone
 
@@ -24,6 +25,8 @@ class Student(models.Model):
         default='DAY_SCHOLAR',
     )
 
+    is_active = models.BooleanField(default=True)
+
     class Meta:
         managed = False
         db_table = 'students'
@@ -34,6 +37,7 @@ class Student(models.Model):
 
 class Attendance(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
+
     SCAN_METHOD_CHOICES = [
         ('FINGERPRINT', 'Fingerprint'),
         ('MANUAL', 'Manual'),
@@ -45,6 +49,7 @@ class Attendance(models.Model):
         choices=SCAN_METHOD_CHOICES,
         default='FINGERPRINT',
     )
+
     STATUS_CHOICES = [
         ('PRESENT', 'Present'),
         ('ABSENT', 'Absent'),
@@ -76,6 +81,8 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"Student {self.student_id} - {self.date}"
+
+
 class FingerprintEnrollment(models.Model):
     FINGER_CHOICES = [
         ('LEFT_THUMB', 'Left Thumb'),
@@ -85,13 +92,16 @@ class FingerprintEnrollment(models.Model):
     ]
 
     student_id = models.IntegerField()
+
     finger = models.CharField(
         max_length=20,
         choices=FINGER_CHOICES
     )
+
     enrolled_at = models.DateTimeField(
         default=timezone.now
     )
+
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -104,3 +114,4 @@ class FingerprintEnrollment(models.Model):
 
     def __str__(self):
         return f"Student {self.student_id} - {self.finger}"
+
