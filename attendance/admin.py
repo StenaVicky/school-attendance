@@ -18,10 +18,10 @@ class StudentAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        'first_name',
-        'last_name',
-    )
-
+    'student_id',
+    'first_name',
+    'last_name',
+)
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
