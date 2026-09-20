@@ -1,3 +1,4 @@
+
 from django.contrib import admin
 from .models import Student, Attendance, FingerprintEnrollment
 
@@ -10,6 +11,7 @@ class StudentAdmin(admin.ModelAdmin):
         'last_name',
         'student_type',
         'is_active',
+        'fingerprint_count',
     )
 
     list_filter = (
@@ -18,10 +20,19 @@ class StudentAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-    'student_id',
-    'first_name',
-    'last_name',
-)
+        'student_id',
+        'first_name',
+        'last_name',
+    )
+
+    def fingerprint_count(self, obj):
+        return FingerprintEnrollment.objects.filter(
+            student_id=obj.student_id,
+            is_active=True
+        ).count()
+
+    fingerprint_count.short_description = 'Fingerprints'
+
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
@@ -55,3 +66,4 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         'finger',
         'is_active',
     )
+
