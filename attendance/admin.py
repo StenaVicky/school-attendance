@@ -72,6 +72,7 @@ class AttendanceAdmin(admin.ModelAdmin):
 class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     list_display = (
         'student_id',
+        'student_name',
         'finger',
         'enrolled_at',
         'is_active',
@@ -85,3 +86,12 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     search_fields = (
         'student_id',
     )
+
+    def student_name(self, obj):
+        try:
+            student = Student.objects.get(student_id=obj.student_id)
+            return f"{student.first_name} {student.last_name}"
+        except Student.DoesNotExist:
+            return "Student not found"
+
+    student_name.short_description = 'Student Name'
