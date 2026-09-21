@@ -9,6 +9,7 @@ class StudentAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'email',
+        'gender',
         'student_type',
         'is_active',
         'fingerprint_count',
@@ -17,6 +18,7 @@ class StudentAdmin(admin.ModelAdmin):
 
     list_filter = (
         'student_type',
+        'gender',
         'is_active',
     )
 
@@ -68,6 +70,10 @@ class AttendanceAdmin(admin.ModelAdmin):
         'date',
         'status',
         'scan_method',
+    )
+
+    search_fields = (
+        'student_id',
     )
 
 
