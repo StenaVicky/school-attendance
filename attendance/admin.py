@@ -23,6 +23,7 @@ class StudentAdmin(admin.ModelAdmin):
         'student_id',
         'first_name',
         'last_name',
+        'phone',
     )
 
     def fingerprint_count(self, obj):
