@@ -8,6 +8,7 @@ class StudentAdmin(admin.ModelAdmin):
         'student_id',
         'first_name',
         'last_name',
+        'email',
         'student_type',
         'is_active',
         'fingerprint_count',
@@ -24,6 +25,7 @@ class StudentAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'phone',
+        'email',
     )
 
     def fingerprint_count(self, obj):
