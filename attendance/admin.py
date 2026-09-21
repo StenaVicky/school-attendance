@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from .models import Student, Attendance, FingerprintEnrollment
 
@@ -12,6 +11,7 @@ class StudentAdmin(admin.ModelAdmin):
         'student_type',
         'is_active',
         'fingerprint_count',
+        'fingerprint_status',
     )
 
     list_filter = (
@@ -32,6 +32,21 @@ class StudentAdmin(admin.ModelAdmin):
         ).count()
 
     fingerprint_count.short_description = 'Fingerprints'
+
+    def fingerprint_status(self, obj):
+        count = FingerprintEnrollment.objects.filter(
+            student_id=obj.student_id,
+            is_active=True
+        ).count()
+
+        if count >= 2:
+            return 'Ready'
+        elif count == 1:
+            return 'Needs another finger'
+        else:
+            return 'Not enrolled'
+
+    fingerprint_status.short_description = 'Fingerprint Status'
 
 
 @admin.register(Attendance)
@@ -66,4 +81,3 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         'finger',
         'is_active',
     )
-
