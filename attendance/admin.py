@@ -81,3 +81,7 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         'finger',
         'is_active',
     )
+
+    search_fields = (
+        'student_id',
+    )
