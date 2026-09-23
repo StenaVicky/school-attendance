@@ -1,4 +1,4 @@
-
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
@@ -104,6 +104,17 @@ class FingerprintEnrollment(models.Model):
 
     is_active = models.BooleanField(default=True)
 
+    def clean(self):
+        active_count = FingerprintEnrollment.objects.filter(
+            student_id=self.student_id,
+            is_active=True
+        ).exclude(pk=self.pk).count()
+
+        if self.is_active and active_count >= 2:
+            raise ValidationError(
+                'A student can have a maximum of 2 active fingerprints.'
+            )
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -114,4 +125,3 @@ class FingerprintEnrollment(models.Model):
 
     def __str__(self):
         return f"Student {self.student_id} - {self.finger}"
-
