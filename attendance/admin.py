@@ -52,6 +52,8 @@ class StudentAdmin(admin.ModelAdmin):
             return 'Not enrolled'
 
     fingerprint_status.short_description = 'Fingerprint Status'
+
+
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = (
@@ -103,6 +105,9 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     search_fields = (
         'student_id',
     )
+
+    # Show the most recently enrolled fingerprints first
+    ordering = ('-enrolled_at',)
 
     def student_name(self, obj):
         try:
