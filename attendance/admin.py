@@ -79,6 +79,8 @@ class AttendanceAdmin(admin.ModelAdmin):
         'student_id',
     )
 
+    date_hierarchy = 'date'
+
     ordering = (
         '-date',
         '-arrival_time',
