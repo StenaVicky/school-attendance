@@ -31,16 +31,14 @@ class StudentAdmin(admin.ModelAdmin):
     )
 
     def fingerprint_count(self, obj):
-        return FingerprintEnrollment.objects.filter(
-            student_id=obj.student_id,
+        return obj.fingerprintenrollment_set.filter(
             is_active=True
         ).count()
 
     fingerprint_count.short_description = 'Fingerprints'
 
     def fingerprint_status(self, obj):
-        count = FingerprintEnrollment.objects.filter(
-            student_id=obj.student_id,
+        count = obj.fingerprintenrollment_set.filter(
             is_active=True
         ).count()
 
@@ -67,15 +65,6 @@ class AttendanceAdmin(admin.ModelAdmin):
         'comment',
     )
 
-    def student_name(self, obj):
-        try:
-            student = Student.objects.get(student_id=obj.student_id)
-            return f"{student.first_name} {student.last_name}"
-        except Student.DoesNotExist:
-            return "Student not found"
-
-    student_name.short_description = 'Student Name'
-
     list_filter = (
         'date',
         'status',
@@ -85,6 +74,15 @@ class AttendanceAdmin(admin.ModelAdmin):
     search_fields = (
         'student_id',
     )
+
+    def student_name(self, obj):
+        try:
+            student = Student.objects.get(student_id=obj.student_id)
+            return f'{student.first_name} {student.last_name}'
+        except Student.DoesNotExist:
+            return 'Unknown student'
+
+    student_name.short_description = 'Student Name'
 
 
 @admin.register(FingerprintEnrollment)
@@ -100,20 +98,22 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     list_filter = (
         'finger',
         'is_active',
+        'enrolled_at',
     )
 
     search_fields = (
         'student_id',
     )
 
-    # Show the most recently enrolled fingerprints first
-    ordering = ('-enrolled_at',)
+    ordering = (
+        '-enrolled_at',
+    )
 
     def student_name(self, obj):
         try:
             student = Student.objects.get(student_id=obj.student_id)
-            return f"{student.first_name} {student.last_name}"
+            return f'{student.first_name} {student.last_name}'
         except Student.DoesNotExist:
-            return "Student not found"
+            return 'Unknown student'
 
     student_name.short_description = 'Student Name'
