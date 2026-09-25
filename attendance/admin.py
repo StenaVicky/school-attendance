@@ -75,6 +75,11 @@ class AttendanceAdmin(admin.ModelAdmin):
         'student_id',
     )
 
+    ordering = (
+        '-date',
+        '-arrival_time',
+    )
+
     def student_name(self, obj):
         try:
             student = Student.objects.get(student_id=obj.student_id)
