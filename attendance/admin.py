@@ -11,6 +11,7 @@ class StudentAdmin(admin.ModelAdmin):
         'email',
         'gender',
         'student_type',
+        'enrollment_date',
         'is_active',
         'fingerprint_count',
         'fingerprint_status',
