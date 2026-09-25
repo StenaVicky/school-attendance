@@ -30,6 +30,10 @@ class StudentAdmin(admin.ModelAdmin):
         'email',
     )
 
+    ordering = (
+        '-enrollment_date',
+    )
+
     def fingerprint_count(self, obj):
         return obj.fingerprintenrollment_set.filter(
             is_active=True
