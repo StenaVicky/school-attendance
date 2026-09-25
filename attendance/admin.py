@@ -21,6 +21,7 @@ class StudentAdmin(admin.ModelAdmin):
         'student_type',
         'gender',
         'is_active',
+        'enrollment_date',
     )
 
     search_fields = (
