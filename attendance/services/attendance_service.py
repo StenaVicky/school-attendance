@@ -26,6 +26,25 @@ def record_arrival(student_id, arrival_time):
             'attendance': None,
         }
 
+    existing_attendance = Attendance.objects.filter(
+        student_id=student_id,
+        date=today
+    ).first()
+
+    if existing_attendance:
+        if existing_attendance.status == 'ABSENT':
+            return {
+                'success': False,
+                'message': 'Student is already marked absent',
+                'attendance': existing_attendance,
+            }
+
+        return {
+            'success': False,
+            'message': 'Already scanned',
+            'attendance': existing_attendance,
+        }
+
     comment = ''
 
     if student.student_type == 'DAY_SCHOLAR':
@@ -34,22 +53,13 @@ def record_arrival(student_id, arrival_time):
         else:
             comment = 'LATE'
 
-    attendance, created = Attendance.objects.get_or_create(
+    attendance = Attendance.objects.create(
         student_id=student_id,
         date=today,
-        defaults={
-            'arrival_time': arrival_time,
-            'status': 'PRESENT',
-            'comment': comment,
-        }
+        arrival_time=arrival_time,
+        status='PRESENT',
+        comment=comment,
     )
-
-    if not created:
-        return {
-            'success': False,
-            'message': 'Already scanned',
-            'attendance': attendance,
-        }
 
     return {
         'success': True,
