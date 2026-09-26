@@ -86,6 +86,13 @@ def record_departure(student_id, departure_time):
             'attendance': None,
         }
 
+    if attendance.status == 'ABSENT':
+        return {
+            'success': False,
+            'message': 'Student is marked absent',
+            'attendance': attendance,
+        }
+
     if attendance.departure_time is not None:
         return {
             'success': False,
