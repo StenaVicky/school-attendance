@@ -102,7 +102,7 @@ def mark_absent_students(current_time):
 
     absent_count = 0
 
-    students = Student.objects.all()
+    students = Student.objects.filter(is_active=True)
 
     for student in students:
         attendance_exists = Attendance.objects.filter(
