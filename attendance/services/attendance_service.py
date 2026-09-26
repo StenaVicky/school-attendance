@@ -3,6 +3,10 @@ from datetime import date, time
 from attendance.models import Attendance, Student
 
 
+ARRIVAL_CUTOFF = time(8, 0)
+ABSENCE_CUTOFF = time(8, 30)
+
+
 def record_arrival(student_id, arrival_time):
     today = date.today()
 
@@ -25,7 +29,7 @@ def record_arrival(student_id, arrival_time):
     comment = ''
 
     if student.student_type == 'DAY_SCHOLAR':
-        if arrival_time <= time(8, 0):
+        if arrival_time <= ARRIVAL_CUTOFF:
             comment = 'ON TIME'
         else:
             comment = 'LATE'
@@ -112,9 +116,8 @@ def record_departure(student_id, departure_time):
 
 def mark_absent_students(current_time):
     today = date.today()
-    cutoff_time = time(8, 30)
 
-    if current_time <= cutoff_time:
+    if current_time <= ABSENCE_CUTOFF:
         return {
             'success': False,
             'message': 'Attendance cutoff has not been reached',
