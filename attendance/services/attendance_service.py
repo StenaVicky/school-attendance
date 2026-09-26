@@ -15,6 +15,13 @@ def record_arrival(student_id, arrival_time):
             'attendance': None,
         }
 
+    if not student.is_active:
+        return {
+            'success': False,
+            'message': 'Student is inactive',
+            'attendance': None,
+        }
+
     comment = ''
 
     if student.student_type == 'DAY_SCHOLAR':
@@ -52,11 +59,18 @@ def record_departure(student_id, departure_time):
     today = date.today()
 
     try:
-        Student.objects.get(student_id=student_id)
+        student = Student.objects.get(student_id=student_id)
     except Student.DoesNotExist:
         return {
             'success': False,
             'message': 'Student not found',
+            'attendance': None,
+        }
+
+    if not student.is_active:
+        return {
+            'success': False,
+            'message': 'Student is inactive',
             'attendance': None,
         }
 
