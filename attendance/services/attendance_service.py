@@ -64,6 +64,7 @@ def record_arrival(student_id, arrival_time):
     return {
         'success': True,
         'message': 'Arrival recorded',
+        'student_name': f'{student.first_name} {student.last_name}',
         'student_type': student.student_type,
         'attendance': attendance,
     }
