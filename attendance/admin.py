@@ -145,6 +145,29 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         '-enrolled_at',
     )
 
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super().get_search_results(
+            request,
+            queryset,
+            search_term,
+        )
+
+        student_ids = Student.objects.filter(
+            first_name__icontains=search_term
+        ).values_list('student_id', flat=True)
+
+        student_ids = student_ids.union(
+            Student.objects.filter(
+                last_name__icontains=search_term
+            ).values_list('student_id', flat=True)
+        )
+
+        queryset |= self.model.objects.filter(
+            student_id__in=student_ids
+        )
+
+        return queryset, use_distinct
+
     def student_name(self, obj):
         try:
             student = Student.objects.get(student_id=obj.student_id)
