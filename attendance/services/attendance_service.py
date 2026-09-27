@@ -121,6 +121,7 @@ def record_departure(student_id, departure_time):
     return {
         'success': True,
         'message': 'Departure recorded',
+        'student_name': f'{student.first_name} {student.last_name}',
         'attendance': attendance,
     }
 
