@@ -9,6 +9,7 @@ class StudentAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'email',
+        'phone',
         'gender',
         'student_type',
         'enrollment_date',
@@ -111,14 +112,13 @@ class AttendanceAdmin(admin.ModelAdmin):
 
         return queryset, use_distinct
 
+    @admin.display(description='Student Name', ordering='student_id')
     def student_name(self, obj):
         try:
             student = Student.objects.get(student_id=obj.student_id)
             return f'{student.first_name} {student.last_name}'
         except Student.DoesNotExist:
             return 'Unknown student'
-
-    student_name.short_description = 'Student Name'
 
 
 @admin.register(FingerprintEnrollment)
@@ -168,11 +168,10 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
 
         return queryset, use_distinct
 
+    @admin.display(description='Student Name', ordering='student_id')
     def student_name(self, obj):
         try:
             student = Student.objects.get(student_id=obj.student_id)
             return f'{student.first_name} {student.last_name}'
         except Student.DoesNotExist:
             return 'Unknown student'
-
-    student_name.short_description = 'Student Name'
