@@ -64,6 +64,7 @@ class AttendanceAdmin(admin.ModelAdmin):
     list_display = (
         'student_id',
         'student_name',
+        'student_phone',
         'date',
         'arrival_time',
         'departure_time',
@@ -111,6 +112,14 @@ class AttendanceAdmin(admin.ModelAdmin):
         )
 
         return queryset, use_distinct
+
+    @admin.display(description='Phone')
+    def student_phone(self, obj):
+        try:
+            student = Student.objects.get(student_id=obj.student_id)
+            return student.phone or 'No phone'
+        except Student.DoesNotExist:
+            return 'Unknown student'
 
     @admin.display(description='Student Name', ordering='student_id')
     def student_name(self, obj):
