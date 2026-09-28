@@ -134,9 +134,11 @@ def mark_absent_students(current_time):
             'success': False,
             'message': 'Attendance cutoff has not been reached',
             'absent_count': 0,
+            'absent_students': [],
         }
 
     absent_count = 0
+    absent_students = []
 
     students = Student.objects.filter(is_active=True)
 
@@ -153,10 +155,15 @@ def mark_absent_students(current_time):
                 status='ABSENT',
                 comment='ABSENT',
             )
+
             absent_count += 1
+            absent_students.append(
+                f'{student.first_name} {student.last_name}'
+            )
 
     return {
         'success': True,
         'message': 'Absent students marked',
         'absent_count': absent_count,
+        'absent_students': absent_students,
     }
