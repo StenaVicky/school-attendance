@@ -71,6 +71,7 @@ class AttendanceAdmin(admin.ModelAdmin):
     search_fields = ('student_id',)
     date_hierarchy = 'date'
     ordering = ('-date', '-arrival_time')
+    list_per_page = 25
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(
@@ -128,6 +129,7 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     list_filter = ('finger', 'is_active', 'enrolled_at')
     search_fields = ('student_id',)
     ordering = ('-enrolled_at',)
+    list_per_page = 25
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(
