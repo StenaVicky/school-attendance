@@ -33,28 +33,21 @@ class StudentAdmin(admin.ModelAdmin):
         'email',
     )
 
-    ordering = (
-        '-enrollment_date',
-    )
+    ordering = ('-enrollment_date',)
 
     def fingerprint_count(self, obj):
-        return obj.fingerprintenrollment_set.filter(
-            is_active=True
-        ).count()
+        return obj.fingerprintenrollment_set.filter(is_active=True).count()
 
     fingerprint_count.short_description = 'Fingerprints'
 
     def fingerprint_status(self, obj):
-        count = obj.fingerprintenrollment_set.filter(
-            is_active=True
-        ).count()
+        count = obj.fingerprintenrollment_set.filter(is_active=True).count()
 
         if count >= 2:
             return 'Ready'
         elif count == 1:
             return 'Needs another finger'
-        else:
-            return 'Not enrolled'
+        return 'Not enrolled'
 
     fingerprint_status.short_description = 'Fingerprint Status'
 
@@ -73,28 +66,14 @@ class AttendanceAdmin(admin.ModelAdmin):
         'comment',
     )
 
-    list_filter = (
-        'date',
-        'status',
-        'scan_method',
-    )
-
-    search_fields = (
-        'student_id',
-    )
-
+    list_filter = ('date', 'status', 'scan_method')
+    search_fields = ('student_id',)
     date_hierarchy = 'date'
-
-    ordering = (
-        '-date',
-        '-arrival_time',
-    )
+    ordering = ('-date', '-arrival_time')
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(
-            request,
-            queryset,
-            search_term,
+            request, queryset, search_term
         )
 
         student_ids = Student.objects.filter(
@@ -107,9 +86,13 @@ class AttendanceAdmin(admin.ModelAdmin):
             ).values_list('student_id', flat=True)
         )
 
-        queryset |= self.model.objects.filter(
-            student_id__in=student_ids
+        student_ids = student_ids.union(
+            Student.objects.filter(
+                phone__icontains=search_term
+            ).values_list('student_id', flat=True)
         )
+
+        queryset |= self.model.objects.filter(student_id__in=student_ids)
 
         return queryset, use_distinct
 
@@ -141,25 +124,13 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         'is_active',
     )
 
-    list_filter = (
-        'finger',
-        'is_active',
-        'enrolled_at',
-    )
-
-    search_fields = (
-        'student_id',
-    )
-
-    ordering = (
-        '-enrolled_at',
-    )
+    list_filter = ('finger', 'is_active', 'enrolled_at')
+    search_fields = ('student_id',)
+    ordering = ('-enrolled_at',)
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super().get_search_results(
-            request,
-            queryset,
-            search_term,
+            request, queryset, search_term
         )
 
         student_ids = Student.objects.filter(
@@ -172,9 +143,7 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
             ).values_list('student_id', flat=True)
         )
 
-        queryset |= self.model.objects.filter(
-            student_id__in=student_ids
-        )
+        queryset |= self.model.objects.filter(student_id__in=student_ids)
 
         return queryset, use_distinct
 
