@@ -144,6 +144,12 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
             ).values_list('student_id', flat=True)
         )
 
+        student_ids = student_ids.union(
+            Student.objects.filter(
+                phone__icontains=search_term
+            ).values_list('student_id', flat=True)
+        )
+
         queryset |= self.model.objects.filter(student_id__in=student_ids)
 
         return queryset, use_distinct
