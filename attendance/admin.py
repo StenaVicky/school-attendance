@@ -135,6 +135,7 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     list_display = (
         'student_id',
         'student_name',
+        'student_phone',
         'finger',
         'enrolled_at',
         'is_active',
@@ -182,5 +183,13 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         try:
             student = Student.objects.get(student_id=obj.student_id)
             return f'{student.first_name} {student.last_name}'
+        except Student.DoesNotExist:
+            return 'Unknown student'
+
+    @admin.display(description='Phone')
+    def student_phone(self, obj):
+        try:
+            student = Student.objects.get(student_id=obj.student_id)
+            return student.phone or 'No phone'
         except Student.DoesNotExist:
             return 'Unknown student'
