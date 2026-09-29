@@ -34,6 +34,7 @@ class StudentAdmin(admin.ModelAdmin):
     )
 
     ordering = ('-enrollment_date',)
+    list_per_page = 25
 
     def fingerprint_count(self, obj):
         return obj.fingerprintenrollment_set.filter(is_active=True).count()
