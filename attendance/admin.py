@@ -121,12 +121,18 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         'student_id',
         'student_name',
         'student_phone',
+        'student_type',
         'finger',
         'enrolled_at',
         'is_active',
     )
 
-    list_filter = ('finger', 'is_active', 'enrolled_at')
+    list_filter = (
+        'finger',
+        'is_active',
+        'enrolled_at',
+    )
+
     search_fields = ('student_id',)
     ordering = ('-enrolled_at',)
     list_per_page = 25
@@ -169,5 +175,13 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         try:
             student = Student.objects.get(student_id=obj.student_id)
             return student.phone or 'No phone'
+        except Student.DoesNotExist:
+            return 'Unknown student'
+
+    @admin.display(description='Student Type')
+    def student_type(self, obj):
+        try:
+            student = Student.objects.get(student_id=obj.student_id)
+            return student.get_student_type_display()
         except Student.DoesNotExist:
             return 'Unknown student'
