@@ -115,6 +115,34 @@ class AttendanceAdmin(admin.ModelAdmin):
             return 'Unknown student'
 
 
+class StudentTypeFilter(admin.SimpleListFilter):
+    title = 'Student Type'
+    parameter_name = 'student_type'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('DAY_SCHOLAR', 'Day Scholar'),
+            ('BOARDER', 'Boarder'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'DAY_SCHOLAR':
+            student_ids = Student.objects.filter(
+                student_type='DAY_SCHOLAR'
+            ).values_list('student_id', flat=True)
+
+            return queryset.filter(student_id__in=student_ids)
+
+        if self.value() == 'BOARDER':
+            student_ids = Student.objects.filter(
+                student_type='BOARDER'
+            ).values_list('student_id', flat=True)
+
+            return queryset.filter(student_id__in=student_ids)
+
+        return queryset
+
+
 @admin.register(FingerprintEnrollment)
 class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     list_display = (
@@ -128,6 +156,7 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
+        StudentTypeFilter,
         'finger',
         'is_active',
         'enrolled_at',
