@@ -51,7 +51,7 @@ class StudentAdmin(admin.ModelAdmin):
         if count >= 2:
             return 'Ready'
         elif count == 1:
-            return 'Needs another finger'
+            return 'Needs 1 more finger'
         return 'Not enrolled'
 
 
