@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from .models import Student, Attendance, FingerprintEnrollment
 
@@ -90,7 +89,6 @@ class AttendanceAdmin(admin.ModelAdmin):
         'student_id',
         'student_name',
         'student_phone',
-        'student_type',
         'date',
         'arrival_time',
         'departure_time',
@@ -130,5 +128,119 @@ class AttendanceAdmin(admin.ModelAdmin):
         student_ids = student_ids.union(
             Student.objects.filter(
                 phone__icontains=search_term
-            ).values_list('student_id',
+            ).values_list('student_id', flat=True)
+        )
 
+        queryset |= self.model.objects.filter(
+            student_id__in=student_ids
+        )
+
+        return queryset, use_distinct
+
+    @admin.display(description='Phone')
+    def student_phone(self, obj):
+        try:
+            student = Student.objects.get(
+                student_id=obj.student_id
+            )
+            return student.phone or 'No phone'
+        except Student.DoesNotExist:
+            return 'Unknown student'
+
+    @admin.display(
+        description='Student Name',
+        ordering='student_id'
+    )
+    def student_name(self, obj):
+        try:
+            student = Student.objects.get(
+                student_id=obj.student_id
+            )
+            return f'{student.first_name} {student.last_name}'
+        except Student.DoesNotExist:
+            return 'Unknown student'
+
+
+@admin.register(FingerprintEnrollment)
+class FingerprintEnrollmentAdmin(admin.ModelAdmin):
+    list_display = (
+        'student_id',
+        'student_name',
+        'student_phone',
+        'student_type',
+        'finger',
+        'enrolled_at',
+        'is_active',
+    )
+
+    list_filter = (
+        StudentTypeFilter,
+        'finger',
+        'is_active',
+        'enrolled_at',
+    )
+
+    search_fields = ('student_id',)
+    search_help_text = 'Search by student ID, name, or phone number.'
+    ordering = ('-enrolled_at',)
+    list_per_page = 25
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super().get_search_results(
+            request, queryset, search_term
+        )
+
+        student_ids = Student.objects.filter(
+            first_name__icontains=search_term
+        ).values_list('student_id', flat=True)
+
+        student_ids = student_ids.union(
+            Student.objects.filter(
+                last_name__icontains=search_term
+            ).values_list('student_id', flat=True)
+        )
+
+        student_ids = student_ids.union(
+            Student.objects.filter(
+                phone__icontains=search_term
+            ).values_list('student_id', flat=True)
+        )
+
+        queryset |= self.model.objects.filter(
+            student_id__in=student_ids
+        )
+
+        return queryset, use_distinct
+
+    @admin.display(
+        description='Student Name',
+        ordering='student_id'
+    )
+    def student_name(self, obj):
+        try:
+            student = Student.objects.get(
+                student_id=obj.student_id
+            )
+            return f'{student.first_name} {student.last_name}'
+        except Student.DoesNotExist:
+            return 'Unknown student'
+
+    @admin.display(description='Phone')
+    def student_phone(self, obj):
+        try:
+            student = Student.objects.get(
+                student_id=obj.student_id
+            )
+            return student.phone or 'No phone'
+        except Student.DoesNotExist:
+            return 'Unknown student'
+
+    @admin.display(description='Student Type')
+    def student_type(self, obj):
+        try:
+            student = Student.objects.get(
+                student_id=obj.student_id
+            )
+            return student.get_student_type_display()
+        except Student.DoesNotExist:
+            return 'Unknown student'
