@@ -105,6 +105,7 @@ class AttendanceAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('student_id',)
+    search_help_text = 'Search by student ID, name, or phone number.'
     date_hierarchy = 'date'
     ordering = ('-date', '-arrival_time')
     list_per_page = 25
@@ -180,6 +181,7 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('student_id',)
+    search_help_text = 'Search by student ID, name, or phone number.'
     ordering = ('-enrolled_at',)
     list_per_page = 25
 
@@ -241,4 +243,4 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
             )
             return student.get_student_type_display()
         except Student.DoesNotExist:
-            return 'Unknown student' 
+            return 'Unknown student'
