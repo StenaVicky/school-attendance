@@ -53,6 +53,34 @@ class StudentAdmin(admin.ModelAdmin):
     fingerprint_status.short_description = 'Fingerprint Status'
 
 
+class StudentTypeFilter(admin.SimpleListFilter):
+    title = 'Student Type'
+    parameter_name = 'student_type'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('DAY_SCHOLAR', 'Day Scholar'),
+            ('BOARDER', 'Boarder'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'DAY_SCHOLAR':
+            student_ids = Student.objects.filter(
+                student_type='DAY_SCHOLAR'
+            ).values_list('student_id', flat=True)
+
+            return queryset.filter(student_id__in=student_ids)
+
+        if self.value() == 'BOARDER':
+            student_ids = Student.objects.filter(
+                student_type='BOARDER'
+            ).values_list('student_id', flat=True)
+
+            return queryset.filter(student_id__in=student_ids)
+
+        return queryset
+
+
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = (
@@ -67,7 +95,13 @@ class AttendanceAdmin(admin.ModelAdmin):
         'comment',
     )
 
-    list_filter = ('date', 'status', 'scan_method')
+    list_filter = (
+        'date',
+        'status',
+        'scan_method',
+        StudentTypeFilter,
+    )
+
     search_fields = ('student_id',)
     date_hierarchy = 'date'
     ordering = ('-date', '-arrival_time')
@@ -113,34 +147,6 @@ class AttendanceAdmin(admin.ModelAdmin):
             return f'{student.first_name} {student.last_name}'
         except Student.DoesNotExist:
             return 'Unknown student'
-
-
-class StudentTypeFilter(admin.SimpleListFilter):
-    title = 'Student Type'
-    parameter_name = 'student_type'
-
-    def lookups(self, request, model_admin):
-        return (
-            ('DAY_SCHOLAR', 'Day Scholar'),
-            ('BOARDER', 'Boarder'),
-        )
-
-    def queryset(self, request, queryset):
-        if self.value() == 'DAY_SCHOLAR':
-            student_ids = Student.objects.filter(
-                student_type='DAY_SCHOLAR'
-            ).values_list('student_id', flat=True)
-
-            return queryset.filter(student_id__in=student_ids)
-
-        if self.value() == 'BOARDER':
-            student_ids = Student.objects.filter(
-                student_type='BOARDER'
-            ).values_list('student_id', flat=True)
-
-            return queryset.filter(student_id__in=student_ids)
-
-        return queryset
 
 
 @admin.register(FingerprintEnrollment)
