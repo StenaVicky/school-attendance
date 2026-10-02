@@ -109,7 +109,9 @@ class AttendanceAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('student_id',)
-    search_help_text = 'Search by student ID, name, or phone number.'
+    search_help_text = (
+        'Search by student ID, first name, last name, or phone number.'
+    )
     date_hierarchy = 'date'
     ordering = ('-date', '-arrival_time')
     list_per_page = 25
