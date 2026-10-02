@@ -33,6 +33,10 @@ class StudentAdmin(admin.ModelAdmin):
         'email',
     )
 
+    search_help_text = (
+        'Search by student ID, first name, last name, email, or phone number.'
+    )
+
     ordering = ('-enrollment_date',)
     list_per_page = 25
 
