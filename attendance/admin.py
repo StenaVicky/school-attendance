@@ -187,7 +187,9 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('student_id',)
-    search_help_text = 'Search by student ID, name, or phone number.'
+    search_help_text = (
+        'Search by student ID, name, phone number, or email address.'
+    )
     ordering = ('-enrolled_at',)
     list_per_page = 25
 
@@ -209,6 +211,12 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         student_ids = student_ids.union(
             Student.objects.filter(
                 phone__icontains=search_term
+            ).values_list('student_id', flat=True)
+        )
+
+        student_ids = student_ids.union(
+            Student.objects.filter(
+                email__icontains=search_term
             ).values_list('student_id', flat=True)
         )
 
