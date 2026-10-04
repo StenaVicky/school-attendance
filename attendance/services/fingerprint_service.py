@@ -1,3 +1,4 @@
+
 from attendance.models import FingerprintEnrollment, Student
 
 
@@ -32,7 +33,7 @@ def enroll_fingerprint(student_id, finger):
     if already_enrolled:
         return {
             'success': False,
-      'message': 'This finger is already enrolled for this student',
+            'message': 'This finger is already enrolled for this student',
             'enrollment': None,
         }
 
@@ -43,6 +44,7 @@ def enroll_fingerprint(student_id, finger):
 
     return {
         'success': True,
-        'message': 'Fingerprint enrolled successfully',
+        'message': 'Fingerprint enrolled successfully for this student',
         'enrollment': enrollment,
     }
+
