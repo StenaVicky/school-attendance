@@ -1,6 +1,14 @@
 from attendance.models import FingerprintEnrollment, Student
 
 
+VALID_FINGERS = {
+    'LEFT_THUMB',
+    'LEFT_INDEX',
+    'RIGHT_THUMB',
+    'RIGHT_INDEX',
+}
+
+
 def enroll_fingerprint(student_id, finger):
     try:
         student = Student.objects.get(student_id=student_id)
@@ -15,6 +23,13 @@ def enroll_fingerprint(student_id, finger):
         return {
             'success': False,
             'message': 'Cannot enroll fingerprint for an inactive student',
+            'enrollment': None,
+        }
+
+    if finger not in VALID_FINGERS:
+        return {
+            'success': False,
+            'message': 'Invalid fingerprint selection',
             'enrollment': None,
         }
 
