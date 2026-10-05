@@ -1,3 +1,4 @@
+
 from django.contrib import admin
 from .models import Student, Attendance, FingerprintEnrollment
 
@@ -109,9 +110,11 @@ class AttendanceAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('student_id',)
+
     search_help_text = (
         'Search by student ID, first name, last name, or phone number.'
     )
+
     date_hierarchy = 'date'
     ordering = ('-date', '-arrival_time')
     list_per_page = 25
@@ -177,6 +180,7 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
         'finger',
         'enrolled_at',
         'is_active',
+        'enrollment_status',
     )
 
     list_filter = (
@@ -187,9 +191,11 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('student_id',)
+
     search_help_text = (
         'Search by student ID, name, phone number, or email address.'
     )
+
     ordering = ('-enrolled_at',)
     list_per_page = 25
 
@@ -204,57 +210,5 @@ class FingerprintEnrollmentAdmin(admin.ModelAdmin):
 
         student_ids = student_ids.union(
             Student.objects.filter(
-                last_name__icontains=search_term
-            ).values_list('student_id', flat=True)
-        )
+                last_name_
 
-        student_ids = student_ids.union(
-            Student.objects.filter(
-                phone__icontains=search_term
-            ).values_list('student_id', flat=True)
-        )
-
-        student_ids = student_ids.union(
-            Student.objects.filter(
-                email__icontains=search_term
-            ).values_list('student_id', flat=True)
-        )
-
-        queryset |= self.model.objects.filter(
-            student_id__in=student_ids
-        )
-
-        return queryset, use_distinct
-
-    @admin.display(
-        description='Student Name',
-        ordering='student_id'
-    )
-    def student_name(self, obj):
-        try:
-            student = Student.objects.get(
-                student_id=obj.student_id
-            )
-            return f'{student.first_name} {student.last_name}'
-        except Student.DoesNotExist:
-            return 'Unknown student'
-
-    @admin.display(description='Phone')
-    def student_phone(self, obj):
-        try:
-            student = Student.objects.get(
-                student_id=obj.student_id
-            )
-            return student.phone or 'No phone'
-        except Student.DoesNotExist:
-            return 'Unknown student'
-
-    @admin.display(description='Student Type')
-    def student_type(self, obj):
-        try:
-            student = Student.objects.get(
-                student_id=obj.student_id
-            )
-            return student.get_student_type_display()
-        except Student.DoesNotExist:
-            return 'Unknown student'
