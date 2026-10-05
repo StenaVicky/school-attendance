@@ -1,14 +1,20 @@
-
 from attendance.models import FingerprintEnrollment, Student
 
 
 def enroll_fingerprint(student_id, finger):
     try:
-        Student.objects.get(student_id=student_id)
+        student = Student.objects.get(student_id=student_id)
     except Student.DoesNotExist:
         return {
             'success': False,
             'message': 'Student not found',
+            'enrollment': None,
+        }
+
+    if not student.is_active:
+        return {
+            'success': False,
+            'message': 'Cannot enroll fingerprint for an inactive student',
             'enrollment': None,
         }
 
@@ -47,4 +53,3 @@ def enroll_fingerprint(student_id, finger):
         'message': 'Fingerprint enrolled successfully for this student',
         'enrollment': enrollment,
     }
-
