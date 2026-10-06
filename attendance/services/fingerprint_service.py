@@ -9,6 +9,13 @@ VALID_FINGERS = {
 }
 
 
+def get_finger_display_name(finger):
+    """
+    Convert a fingerprint code into a readable name for display.
+    """
+    return finger.replace('_', ' ').title()
+
+
 def enroll_fingerprint(student_id, finger):
     try:
         student = Student.objects.get(student_id=student_id)
