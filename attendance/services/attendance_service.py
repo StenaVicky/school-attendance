@@ -8,6 +8,12 @@ ABSENCE_CUTOFF = time(8, 30)
 
 
 def record_arrival(student_id, arrival_time):
+    """
+    Record a student's first arrival scan for the current day.
+
+    Day scholars are marked ON TIME or LATE based on the arrival cutoff.
+    Boarders are recorded as PRESENT without an arrival timing comment.
+    """
     today = date.today()
 
     try:
@@ -71,6 +77,12 @@ def record_arrival(student_id, arrival_time):
 
 
 def record_departure(student_id, departure_time):
+    """
+    Record a student's departure scan for the current day.
+
+    A departure is only allowed when the student has a valid arrival
+    attendance record and has not already scanned out.
+    """
     today = date.today()
 
     try:
@@ -127,6 +139,12 @@ def record_departure(student_id, departure_time):
 
 
 def mark_absent_students(current_time):
+    """
+    Mark active students as absent after the absence cutoff.
+
+    Students who already have an attendance record for today
+    are not modified.
+    """
     today = date.today()
 
     if current_time <= ABSENCE_CUTOFF:
