@@ -8,6 +8,13 @@ VALID_FINGERS = {
     'RIGHT_INDEX',
 }
 
+FINGER_DISPLAY_NAMES = {
+    'LEFT_THUMB': 'Left Thumb',
+    'LEFT_INDEX': 'Left Index',
+    'RIGHT_THUMB': 'Right Thumb',
+    'RIGHT_INDEX': 'Right Index',
+}
+
 MAX_ACTIVE_FINGERPRINTS = 2
 
 
@@ -15,7 +22,10 @@ def get_finger_display_name(finger):
     """
     Convert a fingerprint code into a readable name for display.
     """
-    return finger.replace('_', ' ').title()
+    return FINGER_DISPLAY_NAMES.get(
+        finger,
+        'Unknown Finger'
+    )
 
 
 def enroll_fingerprint(student_id, finger):
