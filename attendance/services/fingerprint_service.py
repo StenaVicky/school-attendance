@@ -8,6 +8,8 @@ VALID_FINGERS = {
     'RIGHT_INDEX',
 }
 
+MAX_ACTIVE_FINGERPRINTS = 2
+
 
 def get_finger_display_name(finger):
     """
@@ -45,7 +47,7 @@ def enroll_fingerprint(student_id, finger):
         is_active=True
     )
 
-    if active_enrollments.count() >= 2:
+    if active_enrollments.count() >= MAX_ACTIVE_FINGERPRINTS:
         return {
             'success': False,
             'message': 'Student already has two active fingerprints',
