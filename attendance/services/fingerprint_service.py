@@ -28,6 +28,13 @@ def get_finger_display_name(finger):
     )
 
 
+def is_valid_finger(finger):
+    """
+    Check whether a fingerprint code is supported.
+    """
+    return finger in VALID_FINGERS
+
+
 def enroll_fingerprint(student_id, finger):
     try:
         student = Student.objects.get(student_id=student_id)
@@ -45,7 +52,7 @@ def enroll_fingerprint(student_id, finger):
             'enrollment': None,
         }
 
-    if finger not in VALID_FINGERS:
+    if not is_valid_finger(finger):
         return {
             'success': False,
             'message': 'Invalid fingerprint selection',
