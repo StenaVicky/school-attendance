@@ -74,6 +74,9 @@ def enroll_fingerprint(student_id, finger):
 
     return {
         'success': True,
-        'message': 'Fingerprint enrolled successfully for this student',
+        'message': (
+            f'Fingerprint enrolled successfully for '
+            f'{student.first_name} {student.last_name}'
+        ),
         'enrollment': enrollment,
     }
